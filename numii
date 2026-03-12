@@ -1,0 +1,88 @@
+#!/bin/bash
+# numii - Interactive wrapper for numi-cli
+# Usage:
+#   numii              -> Interactive mode
+#   numii "2+3"        -> Single expression mode (pass-through to numi-cli)
+#   numii -c "2+3"      -> Single expression mode with clipboard copy
+#   numii -p 20 "2+3"  -> With precision option
+
+set -euo pipefail
+
+if ! command -v numi-cli &> /dev/null; then
+  echo "Error: numi-cli is not installed."
+  echo "Install with: brew install nikolaeu/numi/numi-cli"
+  exit 1
+fi
+
+# Parse options for interactive mode
+NUMI_OPTS=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -p|--precision)
+      NUMI_OPTS+=("$1" "$2")
+      shift 2
+      ;;
+    -c|--copy)
+      COPY=true
+      shift
+      ;;
+    -n|--no-cache|-v|--verbose)
+      NUMI_OPTS+=("$1")
+      shift
+      ;;
+    -l|--locale)
+      NUMI_OPTS+=("$1" "$2")
+      shift 2
+      ;;
+    *)
+      # Has an expression argument: pass everything to numi-cli
+      result=$(numi-cli "${NUMI_OPTS[@]}" "$@")
+      echo "$result"
+      if [ "${COPY:-}" = true ]; then
+        printf '%s' "$result" | pbcopy
+        echo "(copied)" >&2
+      fi
+      exit
+      ;;
+  esac
+done
+
+# Interactive mode
+echo "Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy' to copy last result)"
+if [ ${#NUMI_OPTS[@]} -gt 0 ]; then
+  echo "Options: ${NUMI_OPTS[*]}"
+fi
+echo ""
+
+last_result=""
+
+while true; do
+  if ! read -erp "> " input; then
+    echo ""
+    break
+  fi
+
+  # Skip empty input
+  [ -z "$input" ] && continue
+
+  # Add to history for arrow-key recall
+  history -s "$input"
+
+  # Special commands
+  case "$input" in
+    exit|quit) break ;;
+    copy)
+      if [ -n "$last_result" ]; then
+        printf '%s' "$last_result" | pbcopy
+        echo "Copied: $last_result"
+      else
+        echo "No result to copy"
+      fi
+      continue
+      ;;
+  esac
+
+  result=$(numi-cli ${NUMI_OPTS[@]+"${NUMI_OPTS[@]}"} "$input" 2>&1) || true
+  echo "$result"
+  last_result="$result"
+done

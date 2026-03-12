@@ -1,6 +1,6 @@
 # numii
 
-Interactive wrapper for [numi-cli](https://github.com/nickolaev/numi-cli) smart calculator.
+Interactive wrapper for [numi-cli](https://github.com/nikolaeu/numi) smart calculator.
 
 ## Install
 
@@ -32,7 +32,7 @@ numii
 ```
 
 ```
-Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy' to copy last result)
+Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy'/'cp' to copy last result)
 
 > 2+3
 5
@@ -52,12 +52,13 @@ Copied: 30
 | `-n`, `--no-cache` | Disable cache |
 | `-v`, `--verbose` | Verbose output |
 | `-l LOCALE`, `--locale LOCALE` | Set locale |
+| `-V`, `--version` | Show version |
 
 ## Interactive commands
 
 | Command | Description |
 |---|---|
-| `copy` | Copy last result to clipboard |
+| `copy` / `cp` | Copy last result to clipboard |
 | `exit` / `quit` | Exit interactive mode |
 | `Ctrl+D` | Exit interactive mode |
 

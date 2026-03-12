@@ -8,6 +8,8 @@
 
 set -euo pipefail
 
+VERSION="1.0.0"
+
 if ! command -v numi-cli &> /dev/null; then
   echo "Error: numi-cli is not installed."
   echo "Install with: brew install nikolaeu/numi/numi-cli"
@@ -25,6 +27,10 @@ while [[ $# -gt 0 ]]; do
     -c|--copy)
       COPY=true
       shift
+      ;;
+    -V|--version)
+      echo "numii $VERSION"
+      exit
       ;;
     -n|--no-cache|-v|--verbose)
       NUMI_OPTS+=("$1")
@@ -48,7 +54,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Interactive mode
-echo "Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy' to copy last result)"
+echo "Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy'/'cp' to copy last result)"
 if [ ${#NUMI_OPTS[@]} -gt 0 ]; then
   echo "Options: ${NUMI_OPTS[*]}"
 fi
@@ -71,7 +77,7 @@ while true; do
   # Special commands
   case "$input" in
     exit|quit) break ;;
-    copy)
+    copy|cp)
       if [ -n "$last_result" ]; then
         printf '%s' "$last_result" | pbcopy
         echo "Copied: $last_result"

@@ -36,7 +36,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     *)
       # Has an expression argument: pass everything to numi-cli
-      result=$(numi-cli "${NUMI_OPTS[@]}" "$@")
+      result=$(numi-cli ${NUMI_OPTS[@]+"${NUMI_OPTS[@]}"} "$@")
       echo "$result"
       if [ "${COPY:-}" = true ]; then
         printf '%s' "$result" | pbcopy

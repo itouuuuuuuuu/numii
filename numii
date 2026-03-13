@@ -54,7 +54,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Interactive mode
-echo "Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy'/'cp' to copy last result)"
+echo "Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy'/'cp' to copy last result, 'ans' for last result)"
 if [ ${#NUMI_OPTS[@]} -gt 0 ]; then
   echo "Options: ${NUMI_OPTS[*]}"
 fi
@@ -87,6 +87,15 @@ while true; do
       continue
       ;;
   esac
+
+  # Replace 'ans' with the last result
+  if [[ "$input" =~ ans ]]; then
+    if [ -z "$last_result" ]; then
+      echo "No previous result"
+      continue
+    fi
+    input="${input//ans/$last_result}"
+  fi
 
   result=$(numi-cli ${NUMI_OPTS[@]+"${NUMI_OPTS[@]}"} "$input" 2>&1) || true
   echo "$result"

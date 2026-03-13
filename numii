@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-VERSION="1.0.0"
+VERSION="1.1.0"
 
 if ! command -v numi-cli &> /dev/null; then
   echo "Error: numi-cli is not installed."

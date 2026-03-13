@@ -32,14 +32,16 @@ numii
 ```
 
 ```
-Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy'/'cp' to copy last result)
+Numi Interactive Mode (type 'exit' or Ctrl+D to quit, 'copy'/'cp' to copy last result, 'ans' for last result)
 
 > 2+3
 5
 > 20% of 150
 30
+> ans * 2
+60
 > copy
-Copied: 30
+Copied: 60
 > exit
 ```
 
@@ -58,6 +60,7 @@ Copied: 30
 
 | Command | Description |
 |---|---|
+| `ans` | Reference the previous calculation result |
 | `copy` / `cp` | Copy last result to clipboard |
 | `exit` / `quit` | Exit interactive mode |
 | `Ctrl+D` | Exit interactive mode |
